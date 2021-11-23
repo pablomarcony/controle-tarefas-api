@@ -1,26 +1,43 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateUsuarioDto } from '../dto/create-usuario.dto';
 import { UpdateUsuarioDto } from '../dto/update-usuario.dto';
+import { Usuario } from '../entities/usuario.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsuarioService {
-  create(createUsuarioDto: CreateUsuarioDto) {
-    return 'This action adds a new usuario';
+  constructor(
+    @InjectRepository(Usuario)
+    private readonly usuarioRepository: Repository<Usuario>,
+  ) {}
+  
+  async create(createUsuarioDto: CreateUsuarioDto) {
+    const saltOrRounds = 12;
+    const hash = await bcrypt.hash(createUsuarioDto.password, saltOrRounds);
+    const isMatch = await bcrypt.compare(createUsuarioDto.validatePassword, hash);
+    if(!isMatch){
+      return "Senhas não são iguais!"
+    }
+    createUsuarioDto.password = hash;
+    const usuario = this.usuarioRepository.create(createUsuarioDto)
+    return this.usuarioRepository.save(usuario);
   }
 
   findAll() {
-    return `This action returns all usuario`;
+    return this.usuarioRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} usuario`;
+    return this.usuarioRepository.findOne(id);
   }
 
-  update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
-    return `This action updates a #${id} usuario`;
+  update(updateUsuarioDto: UpdateUsuarioDto) {
+    return `This action updates a  usuario`;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} usuario`;
+    return this.usuarioRepository.delete(id);
   }
 }
