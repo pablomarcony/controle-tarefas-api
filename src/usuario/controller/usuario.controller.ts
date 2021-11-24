@@ -1,15 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException,  } from '@nestjs/common';
 import { UsuarioService } from '../service/usuario.service';
 import { CreateUsuarioDto } from '../dto/create-usuario.dto';
 import { UpdateUsuarioDto } from '../dto/update-usuario.dto';
+import { AuthService } from 'src/auth/service/auth.service';
+import { LocalAuthGuard } from 'src/auth/guard/local-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('usuario')
 @Controller('usuario')
 export class UsuarioController {
-  constructor(private readonly usuarioService: UsuarioService) {}
+  constructor(
+    private readonly usuarioService: UsuarioService,
+    private authService: AuthService
+  ) {}
 
   @Post()
   create(@Body() createUsuarioDto: CreateUsuarioDto) {
     return this.usuarioService.create(createUsuarioDto);
+  }
+
+  @Post('login')
+  async login(@Body('email') email: string,
+              @Body('password') password: string
+  ){
+    const usuario = await this.authService.validateUser(email, password);
+    return await this.authService.login(usuario);  
   }
 
   @Get()
@@ -23,11 +39,15 @@ export class UsuarioController {
   }
 
   @Patch('update/:id')
-  update(@Param('id') id: number, @Body() updateUsuarioDto: UpdateUsuarioDto) {
+  async update(@Param('id') id: number, @Body() updateUsuarioDto: UpdateUsuarioDto) {
+    const usuario = await this.usuarioService.findOne(id);
+    if(!usuario){
+      throw new BadRequestException("Usuário não encontrado.")
+    }
     return this.usuarioService.update(updateUsuarioDto);
   }
 
-  @Put('password')
+  @Patch('password')
   updatePassword(@Body() updateUsuarioDto: UpdateUsuarioDto){
     return this.usuarioService.update(updateUsuarioDto);
   }

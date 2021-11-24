@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUsuarioDto } from '../dto/create-usuario.dto';
@@ -15,14 +15,17 @@ export class UsuarioService {
   
   async create(createUsuarioDto: CreateUsuarioDto) {
     const saltOrRounds = 12;
-    const hash = await bcrypt.hash(createUsuarioDto.password, saltOrRounds);
-    const isMatch = await bcrypt.compare(createUsuarioDto.validatePassword, hash);
+    createUsuarioDto.password = await bcrypt.hash(createUsuarioDto.password, saltOrRounds);
+    const isMatch = await bcrypt.compare(createUsuarioDto.validatePassword, createUsuarioDto.password);
     if(!isMatch){
-      return "Senhas não são iguais!"
+      throw new BadRequestException("Senhas não são iguais!")
     }
-    createUsuarioDto.password = hash;
     const usuario = this.usuarioRepository.create(createUsuarioDto)
     return this.usuarioRepository.save(usuario);
+  }
+
+  async login(condition): Promise<Usuario>{
+    return await this.usuarioRepository.findOne(condition)
   }
 
   findAll() {
@@ -33,8 +36,19 @@ export class UsuarioService {
     return this.usuarioRepository.findOne(id);
   }
 
-  update(updateUsuarioDto: UpdateUsuarioDto) {
-    return `This action updates a  usuario`;
+  async update(updateUsuarioDto: UpdateUsuarioDto) {
+    if(updateUsuarioDto.password){
+      const usuario = await this.findOne(updateUsuarioDto.id);
+      const saltOrRounds = 12;
+      updateUsuarioDto.password = await bcrypt.hash(updateUsuarioDto.password, saltOrRounds);
+      const isMatch = await bcrypt.compare(updateUsuarioDto.validatePassword, updateUsuarioDto.password);
+      if(!isMatch){
+        throw new BadRequestException("Senhas não são iguais!")
+      }
+      usuario.password = updateUsuarioDto.password;
+      updateUsuarioDto = usuario;
+    }
+    return this.usuarioRepository.update(updateUsuarioDto.id, updateUsuarioDto);
   }
 
   remove(id: number) {
