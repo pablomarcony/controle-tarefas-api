@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException,  } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException  } from '@nestjs/common';
 import { UsuarioService } from '../service/usuario.service';
 import { CreateUsuarioDto } from '../dto/create-usuario.dto';
 import { UpdateUsuarioDto } from '../dto/update-usuario.dto';
@@ -6,6 +6,7 @@ import { AuthService } from 'src/auth/service/auth.service';
 import { LocalAuthGuard } from 'src/auth/guard/local-auth.guard';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { ApiTags } from '@nestjs/swagger';
+import { UsuarioLoginDto } from '../dto/usuario-login.dto';
 
 @ApiTags('usuario')
 @Controller('usuario')
@@ -21,10 +22,8 @@ export class UsuarioController {
   }
 
   @Post('login')
-  async login(@Body('email') email: string,
-              @Body('password') password: string
-  ){
-    const usuario = await this.authService.validateUser(email, password);
+  async login(@Body() usuarioLoginDto: UsuarioLoginDto) {
+    const usuario = await this.authService.validateUser(usuarioLoginDto.email, usuarioLoginDto.password);
     return await this.authService.login(usuario);  
   }
 

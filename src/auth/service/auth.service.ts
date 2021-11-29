@@ -23,13 +23,17 @@ export class AuthService {
             throw new BadRequestException('Senha inválida!');
         }
 
-        return this.user;
+        return await this.user;
     }
     
     async login(user: any) {
         const payload = { nome: user.nome, sub: user.id };
         return {
-            access_token: this.jwtService.sign(payload),
+            access_token: this.jwtService.signAsync(payload),
         };
+    }
+
+    async deconde(token){
+        this.jwtService.decode(token);
     }
 }
