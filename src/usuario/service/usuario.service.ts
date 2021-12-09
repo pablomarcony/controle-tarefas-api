@@ -20,6 +20,10 @@ export class UsuarioService {
     if(!isMatch){
       throw new BadRequestException("Senhas não são iguais!")
     }
+    const exists = await this.usuarioRepository.findOne(createUsuarioDto.email);
+    if(exists){
+      throw new BadRequestException("Usuário já cadastrado.")
+    }
     const usuario = this.usuarioRepository.create(createUsuarioDto)
     return this.usuarioRepository.save(usuario);
   }
@@ -37,8 +41,9 @@ export class UsuarioService {
   }
 
   async update(updateUsuarioDto: UpdateUsuarioDto) {
+    const usuario = await this.findOne(updateUsuarioDto.id);
     if(updateUsuarioDto.password){
-      const usuario = await this.findOne(updateUsuarioDto.id);
+      
       const saltOrRounds = 12;
       updateUsuarioDto.password = await bcrypt.hash(updateUsuarioDto.password, saltOrRounds);
       const isMatch = await bcrypt.compare(updateUsuarioDto.validatePassword, updateUsuarioDto.password);
@@ -47,7 +52,7 @@ export class UsuarioService {
       }
       usuario.password = updateUsuarioDto.password;
       updateUsuarioDto = usuario;
-    }
+    }  
     return this.usuarioRepository.update(updateUsuarioDto.id, updateUsuarioDto);
   }
 

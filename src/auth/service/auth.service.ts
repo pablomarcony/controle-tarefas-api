@@ -33,7 +33,7 @@ export class AuthService {
         };
     }
 
-    async deconde(token){
+    async decode(token){
         this.jwtService.decode(token);
     }
 }

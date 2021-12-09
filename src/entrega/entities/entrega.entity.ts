@@ -9,50 +9,36 @@ export class Entrega {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({nullable: false})
     projeto: string;
 
-    @Column()
+    @Column({nullable: false})
     data: Date;
 
-    @ManyToOne(() => Usuario)
+    @ManyToOne(() => Usuario, {nullable: false})
     @JoinColumn({ name: "usuario_id" })
     usuario: Usuario;
 
-    @Column()
+    @Column({nullable: false})
     atividade: string;
 
-    @ManyToOne(() => Categoria)
+    @ManyToOne(() => Categoria, {nullable: false})
     @JoinColumn({ name: "categoria_id" })
     categoria: Categoria;
 
-    @Column()
+    @Column({nullable: false})
     tarefa: string;
 
-    @Column()
+    @Column({nullable: false})
     comentario: string;
 
-    @Column()
+    @Column({nullable: false})
     horas: number;
 
-    @Column()
+    @Column({nullable: false})
     planejado: boolean;
 
-    @Column()
+    @Column({nullable: false})
     produto: string;
 
 }
-
-/*
-Id - Long
-Projeto - String
-Data - Date
-Usuário - User
-Atividade - String
-Categoria - Categoria
-Tarefa - String
-Comentário - String
-Horas trabalhadas - Int
-Planejado - Boolean
-Produto - String
-*/

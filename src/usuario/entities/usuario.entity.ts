@@ -5,6 +5,7 @@ import { IsEmail, MinLength } from 'class-validator';
 export enum Perfil {
     SEATI = "SEATI",
     INDRA = "INDRA",
+    ADMIN = "ADMIN"
 }
 @Entity()
 export class Usuario {
@@ -15,7 +16,7 @@ export class Usuario {
     @Column()
     nome: string;
 
-    @Column()
+    @Column({unique: true})
     @IsEmail()
     email: string;
 

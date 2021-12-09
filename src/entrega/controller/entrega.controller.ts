@@ -1,19 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Headers } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { EntregaService } from '../service/entrega.service';
 import { CreateEntregaDto } from '../dto/create-entrega.dto';
 import { UpdateEntregaDto } from '../dto/update-entrega.dto';
-import { AuthService } from 'src/auth/service/auth.service';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { UsuarioService } from 'src/usuario/service/usuario.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('entrega')
 @Controller('entrega')
 export class EntregaController {
   constructor(private readonly entregaService: EntregaService,
-    private authService: AuthService) {}
+    private readonly usuarioService: UsuarioService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Headers() headers, @Body() createEntregaDto: CreateEntregaDto) {
-    console.log(headers.authentication);
-    this.authService.deconde(headers.authentication);
-    return null;
+  async create(@Body() createEntregaDto: CreateEntregaDto, @Req() req) {
+    const usuario = await this.usuarioService.findOne(req.user.userId);
+    delete usuario.password;
+    createEntregaDto.usuario = usuario;
+    return this.entregaService.create(createEntregaDto);
   }
 
   @Get()
@@ -26,9 +31,11 @@ export class EntregaController {
     return this.entregaService.findOne(+id);
   }
 
-  @Get('data')
-  findData(@Param('dataInit') dataInit: Date, @Param('dataFim') dataFim: Date){
-    
+  @UseGuards(JwtAuthGuard)
+  @Get('data/:dataInit/:dataFim')
+  async findData(@Param('dataInit') dataInit: Date, @Param('dataFim') dataFim: Date, @Req() req){
+    const usuario = await this.usuarioService.findOne(req.user.userId);
+    return await this.entregaService.findData(dataInit, dataFim, usuario)
   }
 
   @Patch('update/:id')

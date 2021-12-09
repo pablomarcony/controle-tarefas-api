@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException  } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, UseGuards  } from '@nestjs/common';
 import { UsuarioService } from '../service/usuario.service';
 import { CreateUsuarioDto } from '../dto/create-usuario.dto';
 import { UpdateUsuarioDto } from '../dto/update-usuario.dto';
@@ -21,6 +21,7 @@ export class UsuarioController {
     return this.usuarioService.create(createUsuarioDto);
   }
 
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Body() usuarioLoginDto: UsuarioLoginDto) {
     const usuario = await this.authService.validateUser(usuarioLoginDto.email, usuarioLoginDto.password);
