@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateLogPdfDto } from './dto/create-log-pdf.dto';
-import { UpdateLogPdfDto } from './dto/update-log-pdf.dto';
+import { CreateLogPdfDto } from '../dto/create-log-pdf.dto';
+import { UpdateLogPdfDto } from '../dto/update-log-pdf.dto';
 
 @Injectable()
 export class LogPdfService {

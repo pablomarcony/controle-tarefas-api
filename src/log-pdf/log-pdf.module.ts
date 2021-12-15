@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { LogPdfService } from './log-pdf.service';
-import { LogPdfController } from './log-pdf.controller';
+import { LogPdfService } from './service/log-pdf.service';
+import { LogPdfController } from './controller/log-pdf.controller';
 
 @Module({
   controllers: [LogPdfController],

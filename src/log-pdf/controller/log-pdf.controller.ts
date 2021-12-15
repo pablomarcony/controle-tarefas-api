@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { LogPdfService } from './log-pdf.service';
-import { CreateLogPdfDto } from './dto/create-log-pdf.dto';
-import { UpdateLogPdfDto } from './dto/update-log-pdf.dto';
+import { LogPdfService } from '../service/log-pdf.service';
+import { CreateLogPdfDto } from '../dto/create-log-pdf.dto';
+import { UpdateLogPdfDto } from '../dto/update-log-pdf.dto';
 
 @Controller('log-pdf')
 export class LogPdfController {

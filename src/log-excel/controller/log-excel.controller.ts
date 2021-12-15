@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { LogExcelService } from './log-excel.service';
-import { CreateLogExcelDto } from './dto/create-log-excel.dto';
-import { UpdateLogExcelDto } from './dto/update-log-excel.dto';
+import { LogExcelService } from '../service/log-excel.service';
+import { CreateLogExcelDto } from '../dto/create-log-excel.dto';
+import { UpdateLogExcelDto } from '../dto/update-log-excel.dto';
 
 @Controller('log-excel')
 export class LogExcelController {
