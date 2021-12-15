@@ -10,8 +10,8 @@ async function bootstrap() {
     .setDescription('Controle Tarefas API')
     .setVersion('1.0')
     .addTag('usuario')
-    .addBearerAuth({ type: 'http', bearerFormat: 'JWT' },
-    'authentication')
+    .addBearerAuth({ type: 'http', bearerFormat: 'JWT', name: 'Authorization', scheme: 'Bearer' },
+    'access_token')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

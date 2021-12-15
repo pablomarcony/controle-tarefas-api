@@ -13,9 +13,8 @@ export class LogExcelService {
     private readonly logExcelRepository: Repository<LogExcel>,
   ) {}
   async create(createLogExcelDto: CreateLogExcelDto) {
-    createLogExcelDto.codigo = createLogExcelDto.entrega[0].id.toString() + createLogExcelDto.entrega[createLogExcelDto.entrega.length - 1].id.toString();
     createLogExcelDto.dataExportacao = new Date();
-    createLogExcelDto.codigo = createLogExcelDto.codigo + String(createLogExcelDto.dataExportacao.getFullYear()) + String(createLogExcelDto.dataExportacao.getMonth() + 1);
+    createLogExcelDto.codigo = `${createLogExcelDto.entrega[0].usuario.nome.substring(0,2).toUpperCase()}${String(createLogExcelDto.dataExportacao.getFullYear())}-${String(createLogExcelDto.dataExportacao.getMonth() + 1)}-${String(createLogExcelDto.dataExportacao.getDate())}`;
     return await this.logExcelRepository.save(this.logExcelRepository.create(createLogExcelDto));
   }
 
