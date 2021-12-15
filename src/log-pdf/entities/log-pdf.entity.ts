@@ -1,6 +1,7 @@
 import { Entrega } from "src/entrega/entities/entrega.entity";
-import { Column, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
+@Entity()
 export class LogPdf {
 
     @PrimaryGeneratedColumn()
