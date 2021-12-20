@@ -8,6 +8,10 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { LogExcelService } from 'src/log-excel/service/log-excel.service';
 import { CreateLogExcelDto } from 'src/log-excel/dto/create-log-excel.dto';
 import * as Excel from 'exceljs';
+import { CreateLogPdfDto } from 'src/log-pdf/dto/create-log-pdf.dto';
+import * as fs from 'fs';
+import * as ejs from 'ejs';
+import * as pdf from 'html-pdf';
 
 @ApiTags('entrega')
 @Controller('entrega')
@@ -95,6 +99,33 @@ export class EntregaController {
     })
     await workbook.xlsx.write(res);
     res.end();
+  }
+
+  @ApiBearerAuth('access_token')
+  @UseGuards(JwtAuthGuard)
+  @Get('data/:dataInit/:dataFim/pdf')
+  async generatePdf(@Param('dataInit') dataInit: Date, @Param('dataFim') dataFim: Date, @Req() req, @Res() res){
+    const usuario = await this.usuarioService.findOne(req.user.userId);
+    const entregas = await this.entregaService.findData(dataInit, dataFim, usuario);
+    const createLogPdfDto = new CreateLogPdfDto;
+    createLogPdfDto.entrega = entregas;
+    const logPdf = await this.logExcelService.create(createLogPdfDto);   
+    var fileName = logPdf.codigo + '.pdf';
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+    const options = {
+      "format": 'A4',
+      "quality": "20",
+      "type": "pdf",
+      "timeout": 540000
+    };
+    var file = "./src/entrega/pdf/html.ejs";
+
+    var html = await ejs.render(fs.readFileSync(file, 'utf8'), { 'locals': entregas });
+    
+    return await pdf.create(html, options).toStream((err, stream) => {
+        return stream.pipe(res);
+    });
   }
 
   @Patch('update/:id')

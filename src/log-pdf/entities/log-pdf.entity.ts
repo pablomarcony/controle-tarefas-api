@@ -20,6 +20,6 @@ export class LogPdf {
     codigo: String;
 
     @Column()
-    exportacao: Date;
+    dataExportacao: Date;
 
 }

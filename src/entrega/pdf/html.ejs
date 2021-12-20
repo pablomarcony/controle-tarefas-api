@@ -1,0 +1,135 @@
+<html>
+<head>
+	<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+	<style>
+		* { 
+			margin:0; 
+			padding:0; 
+			list-style:none; 
+			vertical-align:baseline; 
+		}
+		.body {
+			width: calc(793px - 60px);
+			height: 1082px;
+			padding: 40px 30px 0px !important;
+		}
+		.body-analise {
+			font-size: 12px;
+			font-family: Arial, Helvetica, sans-serif;
+		}
+		.title-tabela {
+			background-color: #004254;
+			color: white;
+			border: solid 1px black;
+			text-align: center;
+			font-weight: 600;
+			padding: 10px;
+			text-transform: uppercase;
+		}
+		.body-infor-1 {
+			width: calc(100% -40px);
+		}
+		.tabela-1 {
+			padding: 0;
+			margin: 0%;
+			width: 100%;
+		}
+		.tabela-1 .caixa-title {
+			width: 40%;
+			border: solid 1px black;
+			padding: 7px;
+			margin: 0;
+			font-weight: 600;
+		}
+		.tabela-1 .caixa-infor {
+			width: 60%;
+			padding: 7px 15px;
+			border: solid 1px black;
+			margin: 0;
+		}
+		.tabela {
+			padding: 0;
+			margin: 0%;
+			width: 100%;
+		}
+		.tabela th {
+			margin: 0;
+			padding: 5px;
+			border: solid 1px black;
+		}
+		.tabela td {
+			margin: 0;
+			padding: 5px;
+			border: solid 1px black;
+		}
+	</style>
+</head>
+<body>
+		<% for (var i = 0; i < locals.length; i++) { %>
+			<div class="body" id="body-<%= i %>">
+				<div class="body-analise" id="body-analise-<%= i %>">
+					<div class="title-tabela">
+						CONTROLE DE TAREFAS
+					</div>
+					<table class="tabela-1">
+                        <tr>
+                        <td class="caixa-title">Usuário:</td>
+                        <td class="caixa-infor"><%= locals[i].usuario.nome %></td>
+                        </tr>						
+						<tr>
+						<td class="caixa-title">Data:</td>
+						<td class="caixa-infor"><%= new Intl.DateTimeFormat('pt-BR', { year: 'numeric', month: 'numeric', day: '2-digit'}).format(locals[i].data) %></td>
+						</tr>
+						<tr>
+                        <td class="caixa-title">Projeto:</td>
+                        <td class="caixa-infor"><%= locals[i].projeto %></td>
+                        </tr>
+                        <tr>
+                        <td class="caixa-title">Atividade:</td>
+                        <td class="caixa-infor"><%= locals[i].atividade %></td>
+                        </tr>
+                        <tr>
+                        <td class="caixa-title">Categoria:</td>
+                        <td class="caixa-infor"><%= locals[i].categoria.descricao %></td>
+                        </tr>
+						<tr>
+						<td class="caixa-title">Produto:</td>
+						<td class="caixa-infor"><%= locals[i].produto %></td>
+						</tr>
+                        <tr>
+                        <td class="caixa-title">Tarefa:</td>
+                        <td class="caixa-infor"><%= locals[i].tarefa %></td>
+                        </tr>
+                        <tr>
+                        <td class="caixa-title">Comentário:</td>
+                        <td class="caixa-infor"><%= locals[i].comentario %></td>
+                        </tr>
+                        <tr>
+                        <td class="caixa-title">Hora:</td>
+                        <td class="caixa-infor"><%= locals[i].horas %></td>
+                        </tr>
+                        <tr>
+                        <td class="caixa-title">Planejado?:</td>
+                        <td class="caixa-infor"><%= locals[i].planejado == true ? 'Sim' : 'Não' %></td>
+                        </tr>
+					</table>
+				</div>
+			</div>
+		<% } %>
+
+		<script>
+			$(document).ready(function() {
+				for (var i = 0; i < '<%= locals.length %>'; i++) {			
+					elementoA = $('#body-' + i);
+					elementoB = $('#body-analise-' + i);
+					for (var c = (elementoA.height() + 3); c < elementoB.height(); c = (elementoA.height() + 3)) {
+						elementoA.css({'height': (elementoA.height() + 1122) + 'px'})
+						
+					}	
+				}
+			})
+		</script>
+</body>
+
+
+</html>
