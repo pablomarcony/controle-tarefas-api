@@ -18,7 +18,8 @@
 			font-family: Arial, Helvetica, sans-serif;
 		}
 		.title-tabela {
-			background-color: #004254;
+			/*background-color: #004254;*/
+            background-color: #03657c;
 			color: white;
 			border: solid 1px black;
 			text-align: center;
@@ -52,15 +53,17 @@
 			margin: 0%;
 			width: 100%;
 		}
-		.tabela th {
+		.tabela .tabela-head {
 			margin: 0;
 			padding: 5px;
 			border: solid 1px black;
+            width: 100%;
 		}
-		.tabela td {
+		.tabela .tabela-info {
 			margin: 0;
 			padding: 5px;
 			border: solid 1px black;
+            width: 100%;
 		}
 	</style>
 </head>
@@ -69,8 +72,9 @@
 			<div class="body" id="body-<%= i %>">
 				<div class="body-analise" id="body-analise-<%= i %>">
 					<div class="title-tabela">
-						CONTROLE DE TAREFAS
+						<p>CONTROLE DE TAREFAS</p>
 					</div>
+                    <br>
 					<table class="tabela-1">
                         <tr>
                         <td class="caixa-title">Usuário:</td>
@@ -78,7 +82,7 @@
                         </tr>						
 						<tr>
 						<td class="caixa-title">Data:</td>
-						<td class="caixa-infor"><%= new Intl.DateTimeFormat('pt-BR', { year: 'numeric', month: 'numeric', day: '2-digit'}).format(locals[i].data) %></td>
+						<td class="caixa-infor"><%= new Intl.DateTimeFormat('pt-BR', { year: 'numeric', month: 'long', day: '2-digit'}).format(locals[i].data) %></td>
 						</tr>
 						<tr>
                         <td class="caixa-title">Projeto:</td>
@@ -97,22 +101,32 @@
 						<td class="caixa-infor"><%= locals[i].produto %></td>
 						</tr>
                         <tr>
-                        <td class="caixa-title">Tarefa:</td>
-                        <td class="caixa-infor"><%= locals[i].tarefa %></td>
-                        </tr>
-                        <tr>
-                        <td class="caixa-title">Comentário:</td>
-                        <td class="caixa-infor"><%= locals[i].comentario %></td>
-                        </tr>
-                        <tr>
                         <td class="caixa-title">Hora:</td>
                         <td class="caixa-infor"><%= locals[i].horas %></td>
                         </tr>
                         <tr>
                         <td class="caixa-title">Planejado?:</td>
                         <td class="caixa-infor"><%= locals[i].planejado == true ? 'Sim' : 'Não' %></td>
-                        </tr>
+                        </tr>                   
 					</table>
+                    <br>
+                    <table class="tabela">
+                        <tr>
+                        <th class="tabela-head">Tarefa:</th>
+                        </tr>
+                        <tr>
+                        <td class="tabela-info"><%= locals[i].tarefa %></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <table class="tabela">
+                        <tr>
+                        <th class="tabela-head">Comentário:</th>
+                        </tr>
+                        <tr>
+                        <td class="tabela-info"><%= locals[i].comentario %></td>
+                        </tr>                        
+                    </table>
 				</div>
 			</div>
 		<% } %>
