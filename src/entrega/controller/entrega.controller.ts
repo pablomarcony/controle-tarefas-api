@@ -47,7 +47,7 @@ export class EntregaController {
   //Rota para Supervisor
   @ApiBearerAuth('access_token')
   @UseGuards(JwtAuthGuard)
-  @Get('data/:dataInit/:dataFim/:usuarioId')
+  @Get('super/:dataInit/:dataFim/:usuarioId')
   async findDataSupervisor(@Param('dataInit') dataInit: Date, @Param('dataFim') dataFim: Date, @Param('usuarioId') usuarioId: number, @Req() req){
     const usuario = await this.usuarioService.findOne(req.user.userId);
     if(usuario.perfil == "INDRA" || usuario.perfil == "SEATI") {
@@ -57,14 +57,13 @@ export class EntregaController {
     if(!user){
       throw new BadRequestException("Nenhum usuário com este id foi encontrado.")
     }
-    return await this.entregaService.findData(dataInit, dataFim, user)
-    
+    return await this.entregaService.findData(dataInit, dataFim, user)    
   }
 
   //Rota para Supervisor
   @ApiBearerAuth('access_token')
   @UseGuards(JwtAuthGuard)
-  @Get('data/:dataInit/:dataFim/:usuarioId/excel')
+  @Get('super/:dataInit/:dataFim/:usuarioId/excel')
   async generateExcelSupervisor(@Param('dataInit') dataInit: Date, @Param('dataFim') dataFim: Date, @Param('usuarioId') usuarioId: number, @Req() req, @Res() res){
     const usuario = await this.usuarioService.findOne(req.user.userId);
     if(usuario.perfil == "INDRA" || usuario.perfil == "SEATI") {
@@ -79,7 +78,7 @@ export class EntregaController {
     createLogExcelDto.entrega = entregas;
     const logExcel = await this.logExcelService.create(createLogExcelDto);
     const workbook = new Excel.Workbook();
-    const sheet = workbook.addWorksheet(usuario.nome.substring(0,5));
+    const sheet = workbook.addWorksheet(usuario.nome.split(" ", 2)[0]);
     var fileName = logExcel.codigo + '.xlsx';
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader("Content-Disposition", "attachment; filename=" + fileName);
@@ -125,7 +124,7 @@ export class EntregaController {
   //Rota para Supervisor
   @ApiBearerAuth('access_token')
   @UseGuards(JwtAuthGuard)
-  @Get('data/:dataInit/:dataFim/:usuarioId/pdf')
+  @Get('super/:dataInit/:dataFim/:usuarioId/pdf')
   async generatePdfSupervisor(@Param('dataInit') dataInit: Date, @Param('dataFim') dataFim: Date, @Param('usuarioId') usuarioId: number, @Req() req, @Res() res){
     const usuario = await this.usuarioService.findOne(req.user.userId);
     if(usuario.perfil == "INDRA" || usuario.perfil == "SEATI") {
@@ -177,7 +176,7 @@ export class EntregaController {
     createLogExcelDto.entrega = entregas;
     const logExcel = await this.logExcelService.create(createLogExcelDto);
     const workbook = new Excel.Workbook();
-    const sheet = workbook.addWorksheet(usuario.nome.substring(0,5));
+    const sheet = workbook.addWorksheet(usuario.nome.split(" ", 2)[0]);
     var fileName = logExcel.codigo + '.xlsx';
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader("Content-Disposition", "attachment; filename=" + fileName);
