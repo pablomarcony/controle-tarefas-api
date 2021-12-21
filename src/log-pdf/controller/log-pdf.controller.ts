@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { LogPdfService } from '../service/log-pdf.service';
 import { CreateLogPdfDto } from '../dto/create-log-pdf.dto';
 import { UpdateLogPdfDto } from '../dto/update-log-pdf.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('log-pdf')
 @Controller('log-pdf')
 export class LogPdfController {
   constructor(private readonly logPdfService: LogPdfService) {}

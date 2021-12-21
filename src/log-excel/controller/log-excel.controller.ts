@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { LogExcelService } from '../service/log-excel.service';
 import { CreateLogExcelDto } from '../dto/create-log-excel.dto';
 import { UpdateLogExcelDto } from '../dto/update-log-excel.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('log-excel')
 @Controller('log-excel')
 export class LogExcelController {
   constructor(private readonly logExcelService: LogExcelService) {}
