@@ -24,7 +24,7 @@ export class EntregaService {
 
   async findData(dataInit: Date, dataFim: Date, usuario: Usuario) : Promise<Entrega[]>{
     const ent = await this.entregaRepository.createQueryBuilder('entrega').leftJoinAndSelect('entrega.usuario', 'usuario').leftJoinAndSelect('entrega.categoria', 'categoria')
-    .where(`entrega.data >= '${dataInit}'`).andWhere(`entrega.data <= '${dataFim}'`).andWhere(`entrega.usuario_id = ${usuario.id}`).getMany();
+    .where(`entrega.data >= '${dataInit}'`).andWhere(`entrega.data <= '${dataFim}'`).andWhere(`entrega.usuario_id = ${usuario.id}`).orderBy('entrega.data').getMany();
     ent.forEach(e=>{
       delete e.usuario.password;
     });
