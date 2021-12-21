@@ -5,7 +5,9 @@ import { IsEmail, MinLength } from 'class-validator';
 export enum Perfil {
     SEATI = "SEATI",
     INDRA = "INDRA",
-    ADMIN = "ADMIN"
+    ADMIN = "ADMIN",
+    SUPERVISOR_INDRA = "SUPERVISOR_INDRA",
+    SUPERVISOR_SEATI = "SUPERVISOR_SEATI"
 }
 @Entity()
 export class Usuario {
